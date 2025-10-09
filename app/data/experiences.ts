@@ -12,7 +12,7 @@ export type Experience = {
 export const experiences: Experience[] = [
   {
     id: 2,
-    title: "Technical Consultant",
+    title: "Software Engineer & Tech Lead",
     company: "PT Global Information Technology",
     date: "Dec 2023 - Present",
     description: `Tech Lead managing six key projects:
