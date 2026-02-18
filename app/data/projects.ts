@@ -117,4 +117,40 @@ export const projects: Projects[] = [
     link: "#",
     imageUrl: "/photos/ocr.jpeg",
   },
+  {
+    id: 7,
+    title: "SentralPart.com",
+    company: "PT Global Innovation Technology",
+    date: "2025-10-01",
+    description:
+      "Led the development of SentralPart.com as Technical Leader, an automotive parts e-commerce platform connecting distributors and retailers. Served as Fullstack Developer and Middleware Engineer, building a scalable backend with Express.js and a modern, responsive frontend with Next.js. Implemented seamless API integrations and middleware solutions to ensure efficient data flow across the platform.",
+    skills: [
+      { id: 1, title: "Next.js" },
+      { id: 2, title: "Express.js" },
+      { id: 3, title: "Middleware" },
+      { id: 4, title: "Tech Leadership" },
+      { id: 5, title: "Fullstack Development" },
+    ],
+    type: "paid",
+    link: "https://sentralpart.com",
+    imageUrl: "/photos/LogoSentralPart-Horizontal.svg",
+  },
+  {
+    id: 8,
+    title: "UMKM App",
+    company: "PT Global Innovation Technology",
+    date: "2025-05-01",
+    description:
+      "Developed a mobile Point of Sale (POS) application tailored for Indonesian SMEs (UMKM). The app enables business owners to manage sales transactions, track inventory and storage in real-time, and gain insights into their business operations. Built with React Native for a seamless cross-platform mobile experience and Express.js for a robust backend API handling product catalogs, stock management, and transaction processing.",
+    skills: [
+      { id: 1, title: "React Native" },
+      { id: 2, title: "Express.js" },
+      { id: 3, title: "Mobile Development" },
+      { id: 4, title: "Inventory Management" },
+      { id: 5, title: "POS System" },
+    ],
+    type: "paid",
+    link: "#",
+    imageUrl: "/photos/umkm-app.jpeg",
+  },
 ];

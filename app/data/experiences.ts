@@ -11,11 +11,26 @@ export type Experience = {
 
 export const experiences: Experience[] = [
   {
+    id: 4,
+    title: "Software Engineer",
+    company: "Sprout Digital Labs",
+    date: "Feb 2025 - Present",
+    description: `Currently working as a Software Engineer at Sprout, contributing to the development and maintenance of the platform.`,
+    skills: [
+      { id: 1, title: "Flutter" },
+      { id: 2, title: "NestJS" },
+      { id: 3, title: "Next.js" },
+    ],
+    type: "work",
+  },
+  {
     id: 2,
-    title: "Software Engineer & Tech Lead",
-    company: "PT Global Information Technology",
-    date: "Dec 2023 - Present",
-    description: `Tech Lead managing six key projects:
+    title: "Software Engineer & Technical Leader",
+    company: "PT Global Innovation Technology",
+    date: "Dec 2023 - Feb 2025",
+    description: `Technical Leader & Software Engineer managing eight key projects:
+- SentralPart.com (automotive parts e-commerce platform — Technical Leader, Fullstack & Middleware with Express.js backend and Next.js frontend)
+- UMKM App (mobile POS application for SMEs with inventory/storage management — Backend & Mobile Developer with React Native and Express.js)
 - Estatement (motorcycle parts management system)
 - Kejar Tugas (internal project management tool)
 - AI-powered Grafana monitoring system
@@ -36,6 +51,8 @@ using Waterfall methodology.`,
       { id: 8, title: "AI Integration" },
       { id: 9, title: "Faiss" },
       { id: 10, title: "Tech Leadership" },
+      { id: 11, title: "Next.js" },
+      { id: 12, title: "Express.js" },
     ],
     type: "work",
   },
