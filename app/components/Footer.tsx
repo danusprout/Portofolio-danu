@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { IconType } from 'react-icons'
-import { FaGithub, FaLinkedin } from 'react-icons/fa'
+import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa'
 
 type NavItem = {
   name: string
@@ -27,11 +27,11 @@ const socialItems: SocialItem[] = [
     href: 'https://www.linkedin.com/in/dhanuwardhana',
     icon: FaLinkedin,
   },
-  // {
-  //   name: "Twitter",
-  //   href: "https://twitter.com/yourusername",
-  //   icon: FaTwitter,
-  // },
+  {
+    name: 'Email',
+    href: 'mailto:Dhanuwardhan12@gmail.com',
+    icon: FaEnvelope,
+  },
 ]
 
 export default function Footer() {
@@ -58,7 +58,9 @@ export default function Footer() {
               ))}
             </nav>
           )}
-          <div className={`flex space-x-6 ${!hasNavItems && 'mt-4'}`}>
+          <div className={`flex flex-col items-center ${!hasNavItems && 'mt-4'}`}>
+            <h3 className="text-sm font-medium text-slate-400 mb-3">Contact</h3>
+            <div className="flex space-x-6">
             {socialItems.map((item) => (
               <a
                 key={item.name}
@@ -71,6 +73,7 @@ export default function Footer() {
                 <span className="sr-only">{item.name}</span>
               </a>
             ))}
+            </div>
           </div>
         </div>
         <div className="mt-8 text-center text-gray-400">

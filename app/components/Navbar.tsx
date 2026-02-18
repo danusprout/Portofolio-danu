@@ -70,8 +70,8 @@ export default function Navbar({ terminalHeight }: NavbarProps) {
               Syahrial Danu
             </a>
           </motion.div>
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
+          <div>
+            <div className="ml-4 md:ml-10 flex items-baseline space-x-2 md:space-x-4">
               <AnimatePresence>
                 {showButtons &&
                   navItems.map((item) => (
@@ -83,6 +83,8 @@ export default function Navbar({ terminalHeight }: NavbarProps) {
                       transition={{ duration: 0.3 }}
                     >
                       <a
+                        id={`nav-${item.name.toLowerCase()}`}
+                        data-testid={`nav-${item.name.toLowerCase()}`}
                         href={item.href}
                         onClick={(e) => smoothScroll(e, item.name.toLowerCase())}
                         className={`text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors ${

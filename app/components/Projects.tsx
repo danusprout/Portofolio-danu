@@ -401,8 +401,30 @@ const ProjectItem = ({
         <div className="relative w-full h-64 overflow-hidden border-2 border-[#273344] bg-[#131821]/80 backdrop-blur-md group-hover:border-[#FFA23E] transition-colors">
           <div className="flex h-full flex-col md:flex-row">
             {/* Content Section */}
-            <div className="w-full md:w-1/2 p-6">
-              <h3 className="text-2xl font-bold text-white">{project.title}</h3>
+            <div className="w-full md:w-1/2 p-6 flex flex-col justify-between">
+              <div>
+                <h3 className="text-2xl font-bold text-white">{project.title}</h3>
+                <p className="text-sm text-slate-400 mt-2 line-clamp-3">
+                  {project.description}
+                </p>
+              </div>
+              {project.skills && project.skills.length > 0 && (
+                <div className="flex flex-wrap gap-1 mt-3">
+                  {project.skills.slice(0, 3).map((skill) => (
+                    <span
+                      key={skill.id}
+                      className="px-2 py-0.5 text-xs font-medium border border-[#273344] text-slate-300 bg-[#273344]/30"
+                    >
+                      {skill.title}
+                    </span>
+                  ))}
+                  {project.skills.length > 3 && (
+                    <span className="px-2 py-0.5 text-xs text-slate-500">
+                      +{project.skills.length - 3}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Animation Section */}

@@ -89,7 +89,7 @@ const ExperienceItem = ({
         </p>
 
         {/* Skills */}
-        {experience.skills && experience.skills.length > 0 && (
+        {experience.skills && experience.skills.length > 0 ? (
           <div className="mt-4 flex flex-wrap gap-2">
             {experience.skills.map((skill) => (
               <span
@@ -103,6 +103,10 @@ const ExperienceItem = ({
                 {skill.title}
               </span>
             ))}
+          </div>
+        ) : (
+          <div className="mt-4">
+            <span className="text-sm text-slate-500 italic">No skills listed</span>
           </div>
         )}
       </div>

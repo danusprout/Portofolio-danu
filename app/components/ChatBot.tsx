@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MessageCircle, X } from "lucide-react";
@@ -17,6 +17,21 @@ export default function ChatBot() {
   const [scrollLeft, setScrollLeft] = useState(0);
   const questionContainerRef = useRef<HTMLDivElement>(null);
 
+  // Close chatbot on Escape key
+  const handleEscapeKey = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        setIsOpen(false);
+      }
+    },
+    [isOpen]
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleEscapeKey);
+    return () => document.removeEventListener("keydown", handleEscapeKey);
+  }, [handleEscapeKey]);
+
   const handleQuestionClick = async (question: string) => {
     setMessages((prev) => [...prev, { text: question, isUser: true }]);
     const botResponse = await simulateBotResponse(question);
@@ -24,13 +39,19 @@ export default function ChatBot() {
   };
 
   const simulateBotResponse = async (question: string): Promise<string> => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    const matchedQuestion = predefinedQuestions.find(
-      (item) => item.question === question
-    );
-    return matchedQuestion
-      ? matchedQuestion.answer
-      : "I'm sorry, I don't have information about that specific question. Is there anything else I can help you with?";
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const matchedQuestion = predefinedQuestions.find(
+        (item) => item.question === question
+      );
+      if (matchedQuestion) {
+        return matchedQuestion.answer;
+      }
+      return "I'm sorry, I don't have information about that specific question. Is there anything else I can help you with?";
+    } catch (error) {
+      console.error("Chatbot error:", error);
+      return "⚠️ Sorry, an error occurred while processing your question. Please try again or select a predefined question below.";
+    }
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -81,7 +102,7 @@ export default function ChatBot() {
           >
             {/* Title Bar */}
             <div className="p-4 bg-[#131821]/80 border-b border-[#273344] backdrop-blur-md">
-              <h3 className="text-white font-medium text-center">🤖 PALLY</h3>
+              <h3 className="text-white font-medium text-center">🤖 Karen</h3>
             </div>
 
             {/* Chat Messages */}
@@ -107,24 +128,36 @@ export default function ChatBot() {
             </ScrollArea>
 
             {/* Questions Carousel */}
-            <div
-              ref={questionContainerRef}
-              className="p-4 border-t border-[#273344] bg-[#131821]/50"
-              onMouseDown={handleMouseDown}
-              onMouseUp={handleMouseUp}
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseUp}
-            >
+            <div className="p-4 border-t border-[#273344] bg-[#131821]/50 overflow-hidden">
               <div
-                className="flex space-x-2 overflow-x-auto"
-                style={{ width: "max-content" }}
+                ref={questionContainerRef}
+                className="flex space-x-2 overflow-x-auto cursor-grab active:cursor-grabbing"
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
+                onMouseDown={handleMouseDown}
+                onMouseUp={handleMouseUp}
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseUp}
+                onTouchStart={(e) => {
+                  setIsDragging(true);
+                  setStartX(e.touches[0].pageX - (questionContainerRef.current?.offsetLeft || 0));
+                  setScrollLeft(questionContainerRef.current?.scrollLeft || 0);
+                }}
+                onTouchEnd={() => setIsDragging(false)}
+                onTouchMove={(e) => {
+                  if (!isDragging) return;
+                  const x = e.touches[0].pageX - (questionContainerRef.current?.offsetLeft || 0);
+                  const walk = (x - startX) * 2;
+                  if (questionContainerRef.current) {
+                    questionContainerRef.current.scrollLeft = scrollLeft - walk;
+                  }
+                }}
               >
                 {predefinedQuestions.map((item, index) => (
                   <Button
                     key={index}
                     onClick={() => handleQuestionClick(item.question)}
                     variant="outline"
-                    className="whitespace-nowrap bg-[#131821]/50 backdrop-blur-lg border-[1px] border-[#273344]/50 text-slate-200"
+                    className="whitespace-nowrap flex-shrink-0 bg-[#131821]/50 backdrop-blur-lg border-[1px] border-[#273344]/50 text-slate-200"
                   >
                     {item.question}
                   </Button>
