@@ -132,7 +132,7 @@ export default function ChatBot() {
               <div
                 ref={questionContainerRef}
                 className="flex space-x-2 overflow-x-auto cursor-grab active:cursor-grabbing"
-                style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
+                style={{ scrollbarWidth: "thin", scrollbarColor: "#273344 transparent", WebkitOverflowScrolling: "touch" }}
                 onMouseDown={handleMouseDown}
                 onMouseUp={handleMouseUp}
                 onMouseMove={handleMouseMove}
