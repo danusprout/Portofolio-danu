@@ -100,7 +100,7 @@ export default function Terminal({ onBannerComplete }: TerminalProps) {
     }
 
     showInitialMessage()
-  }, []) // Only run once on mount
+  }, [onBannerComplete, simulateTyping]) // Added dependencies
 
   const handleInput = (e: FormEvent<HTMLDivElement>) => {
     setTerminalInput(e.currentTarget.textContent || '')

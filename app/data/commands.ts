@@ -1,5 +1,5 @@
 import { Experience, experiences } from "./experiences"; // Import Experience type
-import { projects, Projects } from "./projects"; // Import Projects type
+import { projects, Project } from "./projects"; // Import Project type
 
 export const help = [
   "whois",
@@ -22,7 +22,7 @@ const fetchExperiences = (): Promise<Experience[]> => {
 };
 
 // Simulate fetching projects from an API
-const fetchProjects = (): Promise<Projects[]> => {
+const fetchProjects = (): Promise<Project[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(projects);
@@ -107,7 +107,7 @@ const formatExperiences = (experiences: Experience[]): string => {
 };
 
 // Helper function to format projects
-const formatProjects = (projects: Projects[]): string => {
+const formatProjects = (projects: Project[]): string => {
   return projects
     .map((proj) => {
       const skills = proj.skills
