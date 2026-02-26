@@ -3,19 +3,56 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MessageCircle, X } from "lucide-react";
+import { MessageCircle, X, Send, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { predefinedQuestions } from "@/app/data/chatbots";
 
+import { toast } from "sonner";
+
+interface Message {
+  text: string;
+  isUser: boolean;
+}
+
+// Global utility outside component
+function debounce<T extends (...args: any[]) => void>(fn: T, wait = 50) {
+  let t: any;
+  return (...args: Parameters<T>) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn(...args), wait);
+  };
+}
+
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    { text: "Hello! How can I assist you today?", isUser: false },
+  const [messages, setMessages] = useState<Message[]>([
+    { text: "Hello! I'm Karen 🤖, Danu's AI assistant. Ask me anything about him, or pick a question below!", isUser: false },
   ]);
+  const [inputValue, setInputValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const questionContainerRef = useRef<HTMLDivElement>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const [lastMessageTime, setLastMessageTime] = useState(0);
+
+  const scrollToBottom = useRef(
+    debounce(() => {
+      if (scrollAreaRef.current) {
+        const viewport = scrollAreaRef.current.querySelector(
+          "[data-radix-scroll-area-viewport]"
+        ) as HTMLElement | null;
+        if (viewport) viewport.scrollTop = viewport.scrollHeight;
+      }
+    }, 50)
+  ).current;
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isLoading, scrollToBottom]);
 
   // Close chatbot on Escape key
   const handleEscapeKey = useCallback(
@@ -32,26 +69,84 @@ export default function ChatBot() {
     return () => document.removeEventListener("keydown", handleEscapeKey);
   }, [handleEscapeKey]);
 
-  const handleQuestionClick = async (question: string) => {
-    setMessages((prev) => [...prev, { text: question, isUser: true }]);
-    const botResponse = await simulateBotResponse(question);
-    setMessages((prev) => [...prev, { text: botResponse, isUser: false }]);
+  // Focus input when chat opens
+  useEffect(() => {
+    if (isOpen && inputRef.current) {
+      setTimeout(() => inputRef.current?.focus(), 300);
+    }
+  }, [isOpen]);
+
+  const sendMessage = async (message: string) => {
+    const now = Date.now();
+    if (now - lastMessageTime < 3000) {
+      toast.error("Please wait a moment before sending another message.");
+      return;
+    }
+
+    if (!message.trim() || isLoading) return;
+
+    setLastMessageTime(now);
+    const userMessage = message.trim();
+    setMessages((prev) => [...prev, { text: userMessage, isUser: true }]);
+    setInputValue("");
+    setIsLoading(true);
+
+    try {
+      // Check predefined questions first (instant response)
+      const predefined = predefinedQuestions.find(
+        (item) => item.question.toLowerCase() === userMessage.toLowerCase()
+      );
+
+      if (predefined) {
+        await new Promise((resolve) => setTimeout(resolve, 500)); // Brief delay for UX
+        setMessages((prev) => [
+          ...prev,
+          { text: predefined.answer, isUser: false },
+        ]);
+      } else {
+        // Call AI via API route
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: userMessage }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setMessages((prev) => [
+          ...prev,
+          {
+            text:
+              data.response ||
+              "Sorry, I couldn't process that. Please try again.",
+            isUser: false,
+          },
+        ]);
+      }
+    } catch (error) {
+      console.error("Chat error:", error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: "⚠️ Sorry, something went wrong. Please try again or pick a question below.",
+          isUser: false,
+        },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const simulateBotResponse = async (question: string): Promise<string> => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      const matchedQuestion = predefinedQuestions.find(
-        (item) => item.question === question
-      );
-      if (matchedQuestion) {
-        return matchedQuestion.answer;
-      }
-      return "I'm sorry, I don't have information about that specific question. Is there anything else I can help you with?";
-    } catch (error) {
-      console.error("Chatbot error:", error);
-      return "⚠️ Sorry, an error occurred while processing your question. Please try again or select a predefined question below.";
-    }
+  const handleQuestionClick = (question: string) => {
+    sendMessage(question);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    sendMessage(inputValue);
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -102,48 +197,60 @@ export default function ChatBot() {
           >
             {/* Title Bar */}
             <div className="p-4 bg-[#131821]/80 border-b border-[#273344] backdrop-blur-md">
-              <h3 className="text-white font-medium text-center">🤖 Karen</h3>
+              <h3 className="text-white font-medium text-center">🤖 Karen <span className="text-xs text-emerald-400 font-normal">• AI Powered</span></h3>
             </div>
 
             {/* Chat Messages */}
-            <ScrollArea className="flex-grow p-4">
+            <ScrollArea className="flex-grow p-4" ref={scrollAreaRef}>
               {messages.map((message, index) => (
                 <div
                   key={index}
-                  className={`mb-2 ${
+                  className={`mb-3 ${
                     message.isUser ? "text-right" : "text-left"
                   }`}
                 >
                   <span
-                    className={`inline-block p-2 rounded-lg ${
+                    className={`inline-block p-3 rounded-lg max-w-[85%] text-sm leading-relaxed ${
                       message.isUser
-                        ? "bg-[#1c2736] text-slate-200"
-                        : "bg-[#273344] text-slate-200"
+                        ? "bg-[#1c2736] text-slate-200 rounded-br-sm"
+                        : "bg-[#273344] text-slate-200 rounded-bl-sm"
                     }`}
                   >
                     {message.text}
                   </span>
                 </div>
               ))}
+              {/* Typing indicator */}
+              {isLoading && (
+                <div className="mb-3 text-left">
+                  <span className="inline-block p-3 rounded-lg bg-[#273344] text-slate-400 rounded-bl-sm">
+                    <span className="flex items-center gap-2 text-sm">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Thinking...
+                    </span>
+                  </span>
+                </div>
+              )}
             </ScrollArea>
 
             {/* Questions Carousel */}
-            <div className="p-4 border-t border-[#273344] bg-[#131821]/50 overflow-hidden">
+            <div className="px-4 pt-3 pb-2 border-t border-[#273344] bg-[#131821]/50 overflow-hidden">
+              <p className="text-[10px] text-slate-500 mb-1.5 uppercase tracking-wider">Quick questions</p>
               <div
                 ref={questionContainerRef}
-                className="flex space-x-2 overflow-x-auto cursor-grab active:cursor-grabbing"
+                className={`flex space-x-2 overflow-x-auto ${isLoading ? 'pointer-events-none opacity-70' : 'cursor-grab active:cursor-grabbing'}`}
                 style={{ scrollbarWidth: "thin", scrollbarColor: "#273344 transparent", WebkitOverflowScrolling: "touch" }}
-                onMouseDown={handleMouseDown}
-                onMouseUp={handleMouseUp}
-                onMouseMove={handleMouseMove}
-                onMouseLeave={handleMouseUp}
-                onTouchStart={(e) => {
+                onMouseDown={isLoading ? undefined : handleMouseDown}
+                onMouseUp={isLoading ? undefined : handleMouseUp}
+                onMouseMove={isLoading ? undefined : handleMouseMove}
+                onMouseLeave={isLoading ? undefined : handleMouseUp}
+                onTouchStart={isLoading ? undefined : (e) => {
                   setIsDragging(true);
                   setStartX(e.touches[0].pageX - (questionContainerRef.current?.offsetLeft || 0));
                   setScrollLeft(questionContainerRef.current?.scrollLeft || 0);
                 }}
-                onTouchEnd={() => setIsDragging(false)}
-                onTouchMove={(e) => {
+                onTouchEnd={isLoading ? undefined : () => setIsDragging(false)}
+                onTouchMove={isLoading ? undefined : (e) => {
                   if (!isDragging) return;
                   const x = e.touches[0].pageX - (questionContainerRef.current?.offsetLeft || 0);
                   const walk = (x - startX) * 2;
@@ -151,19 +258,50 @@ export default function ChatBot() {
                     questionContainerRef.current.scrollLeft = scrollLeft - walk;
                   }
                 }}
+                role="listbox"
+                aria-label="Quick questions"
               >
                 {predefinedQuestions.map((item, index) => (
                   <Button
                     key={index}
                     onClick={() => handleQuestionClick(item.question)}
+                    disabled={isLoading}
                     variant="outline"
-                    className="whitespace-nowrap flex-shrink-0 bg-[#131821]/50 backdrop-blur-lg border-[1px] border-[#273344]/50 text-slate-200"
+                    className="whitespace-nowrap flex-shrink-0 bg-[#131821]/50 backdrop-blur-lg border-[1px] border-[#273344]/50 text-slate-200 text-xs disabled:opacity-50"
                   >
                     {item.question}
                   </Button>
                 ))}
               </div>
             </div>
+
+            {/* Input Field */}
+            <form
+              onSubmit={handleSubmit}
+              className="p-3 border-t border-[#273344] bg-[#131821]/80 flex gap-2"
+            >
+              <input
+                ref={inputRef}
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                placeholder="Ask me anything about Danu..."
+                disabled={isLoading}
+                className="flex-1 bg-[#1c2736] border border-[#273344] rounded-lg px-3 py-2 text-sm text-slate-200 placeholder:text-slate-500 outline-none focus:border-[#3b4f6b] transition-colors disabled:opacity-50"
+              />
+              <Button
+                type="submit"
+                disabled={isLoading || !inputValue.trim()}
+                className="rounded-lg p-2 bg-[#1c2736] border border-[#273344] text-slate-200 hover:bg-[#273344] disabled:opacity-50 transition-colors"
+                variant="outline"
+              >
+                {isLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Send className="h-4 w-4" />
+                )}
+              </Button>
+            </form>
           </motion.div>
         )}
       </AnimatePresence>

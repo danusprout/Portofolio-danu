@@ -13,6 +13,18 @@ export default function Navbar({ terminalHeight }: NavbarProps) {
   const [showButtons, setShowButtons] = useState(false)
   const [activeSection, setActiveSection] = useState<string | null>(null)
 
+  // Throttle helper to prevent excessive scroll event firings
+  function throttle<T extends (...args: any[]) => any>(func: T, limit: number) {
+    let inThrottle: boolean;
+    return function(this: any, ...args: Parameters<T>) {
+      if (!inThrottle) {
+        func.apply(this, args);
+        inThrottle = true;
+        setTimeout(() => inThrottle = false, limit);
+      }
+    };
+  }
+
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY
@@ -37,8 +49,10 @@ export default function Navbar({ terminalHeight }: NavbarProps) {
       }
     }
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    const throttledHandleScroll = throttle(handleScroll, 100)
+
+    window.addEventListener('scroll', throttledHandleScroll)
+    return () => window.removeEventListener('scroll', throttledHandleScroll)
   }, [terminalHeight])
 
   const navItems = [

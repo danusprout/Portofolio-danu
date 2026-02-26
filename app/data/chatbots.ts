@@ -44,20 +44,5 @@ export const predefinedQuestions: Question[] = [
   },
 ]
 
-// Placeholder for DeepSeek V3 API integration
-export const fetchDeepSeekResponse = async (
-  question: string
-): Promise<string> => {
-  // Replace this with actual API call to DeepSeek V3
-  const response = await fetch("https://api.deepseek.com/v3/chat", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer YOUR_DEEPSEEK_API_KEY`,
-    },
-    body: JSON.stringify({ question }),
-  });
-
-  const data = await response.json();
-  return data.response; // Adjust based on the API response structure
-};
+// AI chat is now handled via /api/chat route (server-side)
+// Predefined questions above are used for quick-access buttons

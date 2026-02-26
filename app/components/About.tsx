@@ -14,18 +14,9 @@ export default function About() {
   const [aboutMe, setAboutMe] = useState<About[]>([])
   const [loading, setLoading] = useState(true)
 
-  // Simulate fetching data from an API
   useEffect(() => {
-    const fetchData = async () => {
-      // Simulate a delay for API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      // Set the data (simulating API response)
-      setAboutMe(aboutData)
-      setLoading(false)
-    }
-
-    fetchData()
+    setAboutMe(aboutData)
+    setLoading(false)
   }, [])
 
   if (loading) {
@@ -94,7 +85,7 @@ export default function About() {
             asChild
             className="rounded-full bg-[#10B981] hover:bg-[#0D9668] text-white font-medium px-6 py-2 transition-all duration-300 hover:scale-105"
           >
-            <Link href="#">Say hi!</Link>
+            <Link href="mailto:Dhanuwardhan12@gmail.com">Say hi!</Link>
           </Button>
 
           <Button
@@ -102,7 +93,7 @@ export default function About() {
             className="rounded-full bg-[#273344] hover:bg-[#354459] text-white font-medium px-6 py-2 transition-all duration-300 hover:scale-105"
           >
             <Link
-              href="/cv/Syahrial Danu Wardhana-resume.pdf"
+              href="/cv/Syahrial-Danu-Wardhana-resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
             >

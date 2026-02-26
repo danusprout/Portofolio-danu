@@ -9,8 +9,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Syahrial Danu ",
-  description: "",
+  title: "Syahrial Danu",
+  description: "Portfolio of Syahrial Danu, a Fullstack Developer specializing in Next.js, Flutter, NestJS, and AI integrations.",
 };
 
 export default function RootLayout({

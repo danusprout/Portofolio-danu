@@ -120,10 +120,8 @@ export default function Experiences() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => {
-      setExperiencesData(experienceItem);
-      setLoading(false);
-    }, 1000);
+    setExperiencesData(experienceItem);
+    setLoading(false);
   }, []);
 
   if (loading) {
