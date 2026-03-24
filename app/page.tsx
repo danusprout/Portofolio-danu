@@ -25,14 +25,14 @@ export default function Home() {
   const terminalRef = useRef<HTMLDivElement>(null);
 
   const handleBannerComplete = () => {
-    window.sessionStorage.setItem(TERMINAL_BOOT_STORAGE_KEY, "true");
+    window.localStorage.setItem(TERMINAL_BOOT_STORAGE_KEY, "true");
     setShowContent(true);
     setInitialMessageComplete(true);
   };
 
   useEffect(() => {
     const hasCompletedBoot =
-      window.sessionStorage.getItem(TERMINAL_BOOT_STORAGE_KEY) === "true";
+      window.localStorage.getItem(TERMINAL_BOOT_STORAGE_KEY) === "true";
 
     if (hasCompletedBoot) {
       setShowContent(true);
