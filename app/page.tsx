@@ -43,7 +43,10 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-[#10151D] selection:bg-[#FFA23E]/20 selection:text-[#FFA23E] relative">
+    <main
+      id="top"
+      className="min-h-screen bg-[#10151D] selection:bg-[#FFA23E]/20 selection:text-[#FFA23E] relative"
+    >
       <PatternBackground />
       <Layout>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-56 2xl:px-64">

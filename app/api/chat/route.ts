@@ -51,16 +51,56 @@ const FREE_MODELS = [
   "meta-llama/llama-3.2-3b-instruct:free",
 ];
 
+const MAX_MESSAGE_LENGTH = 500;
+const MODEL_TIMEOUT_MS = 10_000;
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX_REQUESTS = 10;
+
+const rateLimitStore = new Map<string, { count: number; resetAt: number }>();
+
+function getClientKey(request: NextRequest) {
+  const forwardedFor = request.headers.get("x-forwarded-for");
+  if (forwardedFor) {
+    return forwardedFor.split(",")[0].trim();
+  }
+
+  return request.headers.get("x-real-ip") ?? "anonymous";
+}
+
+function isRateLimited(clientKey: string) {
+  const now = Date.now();
+  const existingEntry = rateLimitStore.get(clientKey);
+
+  if (!existingEntry || now > existingEntry.resetAt) {
+    rateLimitStore.set(clientKey, {
+      count: 1,
+      resetAt: now + RATE_LIMIT_WINDOW_MS,
+    });
+    return false;
+  }
+
+  if (existingEntry.count >= RATE_LIMIT_MAX_REQUESTS) {
+    return true;
+  }
+
+  existingEntry.count += 1;
+  return false;
+}
+
 async function callOpenRouterModel(
   apiKey: string,
   model: string,
   message: string
 ): Promise<{ success: boolean; response?: string; error?: string }> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), MODEL_TIMEOUT_MS);
+
   try {
     const res = await fetch(
       "https://openrouter.ai/api/v1/chat/completions",
       {
         method: "POST",
+        signal: controller.signal,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${apiKey}`,
@@ -92,14 +132,22 @@ async function callOpenRouterModel(
     }
     return { success: false, error: "No content in response" };
   } catch (err) {
+    if (err instanceof Error && err.name === "AbortError") {
+      console.warn(`Model ${model} timed out after ${MODEL_TIMEOUT_MS}ms`);
+      return { success: false, error: "Request timed out" };
+    }
+
     console.warn(`Model ${model} threw error:`, err);
     return { success: false, error: String(err) };
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
     const { message } = await request.json();
+    const clientKey = getClientKey(request);
 
     if (!message || typeof message !== "string") {
       return NextResponse.json(
@@ -108,9 +156,39 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const trimmedMessage = message.trim();
+
+    if (!trimmedMessage) {
+      return NextResponse.json(
+        { error: "Message cannot be empty" },
+        { status: 400 }
+      );
+    }
+
+    if (trimmedMessage.length > MAX_MESSAGE_LENGTH) {
+      return NextResponse.json(
+        {
+          error: `Message is too long. Maximum length is ${MAX_MESSAGE_LENGTH} characters.`,
+        },
+        { status: 413 }
+      );
+    }
+
+    if (isRateLimited(clientKey)) {
+      return NextResponse.json(
+        { error: "Too many requests. Please wait a moment and try again." },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(RATE_LIMIT_WINDOW_MS / 1000),
+          },
+        }
+      );
+    }
+
     // Check predefined questions first for instant response
     const predefined = predefinedQuestions.find(
-      (item) => item.question.toLowerCase() === message.toLowerCase()
+      (item) => item.question.toLowerCase() === trimmedMessage.toLowerCase()
     );
     if (predefined) {
       return NextResponse.json({ response: predefined.answer });
@@ -129,7 +207,7 @@ export async function POST(request: NextRequest) {
     // Try each model in the fallback chain
     for (const model of FREE_MODELS) {
       console.log(`Trying model: ${model}`);
-      const result = await callOpenRouterModel(apiKey, model, message);
+      const result = await callOpenRouterModel(apiKey, model, trimmedMessage);
       if (result.success && result.response) {
         console.log(`Success with model: ${model}`);
         return NextResponse.json({ response: result.response });

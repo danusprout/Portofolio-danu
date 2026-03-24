@@ -1,0 +1,52 @@
+<svg width="1200" height="720" viewBox="0 0 1200 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="chatbotBg" x1="180" y1="60" x2="1030" y2="670" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#182234"/>
+      <stop offset="1" stop-color="#0F1724"/>
+    </linearGradient>
+    <linearGradient id="chatbotCard" x1="180" y1="134" x2="980" y2="530" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#223048"/>
+      <stop offset="1" stop-color="#182133"/>
+    </linearGradient>
+    <linearGradient id="chatbotAccent" x1="689" y1="238" x2="987" y2="405" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFA23E"/>
+      <stop offset="1" stop-color="#F43F5E"/>
+    </linearGradient>
+    <filter id="chatbotGlow" x="618" y="184" width="438" height="287" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+      <feGaussianBlur stdDeviation="26" result="effect1_foregroundBlur_1_1"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="720" fill="#0E141E"/>
+  <circle cx="1016" cy="152" r="122" fill="#F43F5E" fill-opacity="0.12"/>
+  <circle cx="174" cy="612" r="138" fill="#10B981" fill-opacity="0.14"/>
+  <rect x="84" y="72" width="1032" height="576" rx="36" fill="url(#chatbotBg)" stroke="#2A374B" stroke-width="4"/>
+  <rect x="148" y="132" width="904" height="456" rx="28" fill="url(#chatbotCard)"/>
+  <rect x="148" y="132" width="904" height="72" rx="28" fill="#131C2A"/>
+  <circle cx="196" cy="168" r="8" fill="#FF6059"/>
+  <circle cx="224" cy="168" r="8" fill="#FFBE2F"/>
+  <circle cx="252" cy="168" r="8" fill="#29CE42"/>
+  <rect x="314" y="154" width="192" height="28" rx="14" fill="#263449"/>
+  <rect x="336" y="163" width="110" height="10" rx="5" fill="#94A3B8"/>
+  <rect x="190" y="240" width="412" height="126" rx="30" fill="#243245"/>
+  <circle cx="244" cy="284" r="28" fill="#10B981" fill-opacity="0.18" stroke="#10B981" stroke-width="3"/>
+  <path d="M244 268C234.059 268 226 276.059 226 286C226 295.941 234.059 304 244 304C253.941 304 262 295.941 262 286C262 276.059 253.941 268 244 268Z" fill="#10B981"/>
+  <rect x="290" y="258" width="248" height="18" rx="9" fill="#F8FAFC"/>
+  <rect x="290" y="292" width="180" height="12" rx="6" fill="#8CA0B8"/>
+  <rect x="290" y="320" width="222" height="12" rx="6" fill="#71849B"/>
+  <g filter="url(#chatbotGlow)">
+    <rect x="670" y="236" width="334" height="183" rx="32" fill="url(#chatbotAccent)" fill-opacity="0.22"/>
+  </g>
+  <rect x="694" y="240" width="286" height="165" rx="28" fill="#121A28" stroke="#FFA23E" stroke-width="2"/>
+  <path d="M738 280C738 257.909 755.909 240 778 240H896C918.091 240 936 257.909 936 280V330C936 352.091 918.091 370 896 370H843L793 404V370H778C755.909 370 738 352.091 738 330V280Z" fill="#202D40"/>
+  <circle cx="798" cy="307" r="10" fill="#FFA23E"/>
+  <circle cx="838" cy="307" r="10" fill="#10B981"/>
+  <circle cx="878" cy="307" r="10" fill="#F43F5E"/>
+  <rect x="194" y="420" width="330" height="20" rx="10" fill="#4B5F77"/>
+  <rect x="194" y="456" width="470" height="16" rx="8" fill="#314156"/>
+  <rect x="194" y="488" width="412" height="16" rx="8" fill="#314156"/>
+  <rect x="194" y="530" width="204" height="14" rx="7" fill="#10B981" fill-opacity="0.45"/>
+  <text x="190" y="618" fill="#F8FAFC" font-family="Arial, sans-serif" font-size="46" font-weight="700">AI Customer Service Chatbot</text>
+  <text x="190" y="652" fill="#93A5BC" font-family="Arial, sans-serif" font-size="22">Conversational support dashboard with triage and handoff cues</text>
+</svg>

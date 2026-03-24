@@ -1,6 +1,6 @@
 import { projects as projectItem } from "@/app/data/projects";
 import type { Project } from "@/app/data/projects";
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState } from "react";
 import { HiOutlineBeaker, HiOutlineExternalLink } from "react-icons/hi";
 import { motion } from "framer-motion";
 import {
@@ -19,13 +19,12 @@ import { TetrisAnimation } from "./TetrisAnimation";
 // ProjectItem Component
 const ProjectItem = ({
   project,
-  index,
 }: {
   project: Project;
-  index: number;
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const hasLiveLink = project.link !== "#";
 
   const formatDate = (date: Date | string) => {
     return new Intl.DateTimeFormat("en-US", {
@@ -134,17 +133,23 @@ const ProjectItem = ({
 
                 {/* Visit Button */}
                 <div className="flex justify-end pt-4">
-                  <Button asChild className="bg-[#273344] hover:bg-[#354459]">
-                    <a
-                      href={project.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center"
-                    >
-                      Visit Project
-                      <HiOutlineExternalLink className="ml-2" />
-                    </a>
-                  </Button>
+                  {hasLiveLink ? (
+                    <Button asChild className="bg-[#273344] hover:bg-[#354459]">
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center"
+                      >
+                        Visit Project
+                        <HiOutlineExternalLink className="ml-2" />
+                      </a>
+                    </Button>
+                  ) : (
+                    <span className="inline-flex items-center rounded-md border border-[#273344] px-3 py-2 text-sm text-slate-400">
+                      Private Project
+                    </span>
+                  )}
                 </div>
               </div>
             </DialogDescription>
@@ -204,8 +209,8 @@ export default function Projects() {
 
       <div className="py-8">
         <div className="grid grid-cols-1 gap-8">
-          {projects.map((project, index) => (
-            <ProjectItem key={project.id} project={project} index={index} />
+          {projects.map((project) => (
+            <ProjectItem key={project.id} project={project} />
           ))}
         </div>
       </div>

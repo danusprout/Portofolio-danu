@@ -4,12 +4,22 @@ export function smoothScroll(
 ) {
   e.preventDefault();
   const targetElement = document.getElementById(targetId);
-  if (targetElement) {
-    targetElement.scrollIntoView({
+
+  if (!targetElement && targetId === "top") {
+    window.scrollTo({
+      top: 0,
       behavior: "smooth",
-      block: "start",
     });
-    // Update URL without page reload
-    history.pushState(null, "", `#${targetId}`);
+    history.pushState(null, "", "#top");
+    return;
   }
+
+  if (!targetElement) return;
+
+  targetElement.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
+  // Update URL without page reload
+  history.pushState(null, "", `#${targetId}`);
 }

@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowUp } from "lucide-react";
 import ChatBot from "@/app/components/ChatBot";
@@ -21,24 +20,21 @@ export default function FloatingButton({
   const [isMuted, setIsMuted] = useState(true);
   const [volume, setVolume] = useState(0.4);
   const [isLoading, setIsLoading] = useState(true);
-  const fadeInterval = useRef<NodeJS.Timeout>();
-  const hasAutoplayedRef = useRef(true);
+  const fadeInterval = useRef<ReturnType<typeof setInterval>>();
+  const autoplayTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const hasAutoplayedRef = useRef(false);
 
-  const [play, { pause, sound }] = useSound("/music/background-music.mp3", {
+  const [play, { pause }] = useSound("/music/background-music.mp3", {
     volume,
     loop: true,
     interrupt: false,
     onload: () => {
       setIsLoading(false);
       console.log("Music loaded successfully");
-      // Try to autoplay if initial message is complete
-      if (initialMessageComplete && !hasAutoplayedRef.current) {
-        setTimeout(() => handleInitialPlay(), 2000);
-      }
     },
   });
 
-  const handleInitialPlay = () => {
+  const handleInitialPlay = useCallback(() => {
     try {
       hasAutoplayedRef.current = true;
       setIsMuted(false);
@@ -52,7 +48,7 @@ export default function FloatingButton({
         description: "Could not autoplay the music",
       });
     }
-  };
+  }, [play]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -60,9 +56,28 @@ export default function FloatingButton({
       if (fadeInterval.current) {
         clearInterval(fadeInterval.current);
       }
+      if (autoplayTimeoutRef.current) {
+        clearTimeout(autoplayTimeoutRef.current);
+      }
       pause();
     };
   }, [pause]);
+
+  useEffect(() => {
+    if (!initialMessageComplete || isLoading || hasAutoplayedRef.current) {
+      return;
+    }
+
+    autoplayTimeoutRef.current = setTimeout(() => {
+      handleInitialPlay();
+    }, 2000);
+
+    return () => {
+      if (autoplayTimeoutRef.current) {
+        clearTimeout(autoplayTimeoutRef.current);
+      }
+    };
+  }, [handleInitialPlay, initialMessageComplete, isLoading]);
 
   const fadeIn = () => {
     if (fadeInterval.current) clearInterval(fadeInterval.current);
@@ -124,10 +139,6 @@ export default function FloatingButton({
         description: "Could not play the audio file",
       });
     }
-  };
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
