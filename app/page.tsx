@@ -14,19 +14,34 @@ import Navbar from "@/app/components/Navbar";
 import { PatternBackground } from "@/components/ui/pattern-background";
 import { Toaster } from "@/components/ui/sonner";
 
+const TERMINAL_BOOT_STORAGE_KEY = "terminalBootCompleted";
+
 export default function Home() {
   const [showContent, setShowContent] = useState(false);
   const [initialMessageComplete, setInitialMessageComplete] = useState(false);
+  const [shouldPlayIntro, setShouldPlayIntro] = useState<boolean | null>(null);
   const [terminalHeight, setTerminalHeight] = useState(0);
   const [terminalWidth, setTerminalWidth] = useState(0);
   const terminalRef = useRef<HTMLDivElement>(null);
 
   const handleBannerComplete = () => {
+    window.sessionStorage.setItem(TERMINAL_BOOT_STORAGE_KEY, "true");
     setShowContent(true);
     setInitialMessageComplete(true);
   };
 
   useEffect(() => {
+    const hasCompletedBoot =
+      window.sessionStorage.getItem(TERMINAL_BOOT_STORAGE_KEY) === "true";
+
+    if (hasCompletedBoot) {
+      setShowContent(true);
+      setInitialMessageComplete(true);
+      setShouldPlayIntro(false);
+    } else {
+      setShouldPlayIntro(true);
+    }
+
     const updateTerminalDimensions = () => {
       if (terminalRef.current) {
         setTerminalHeight(terminalRef.current.offsetHeight);
@@ -59,7 +74,12 @@ export default function Home() {
               transition={{ duration: 0.5 }}
               className="mx-auto w-full backdrop-blur-sm"
             >
-              <Terminal onBannerComplete={handleBannerComplete} />
+              {shouldPlayIntro !== null && (
+                <Terminal
+                  onBannerComplete={handleBannerComplete}
+                  skipIntro={!shouldPlayIntro}
+                />
+              )}
             </motion.div>
 
             <AnimatePresence>

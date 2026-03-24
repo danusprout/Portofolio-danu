@@ -28,18 +28,9 @@ export const experiences: Experience[] = [
     title: "Software Engineer & Technical Leader",
     company: "PT Global Innovation Technology",
     date: "Dec 2023 - Feb 2025",
-    description: `Technical Leader & Software Engineer managing eight key projects:
-- SentralPart.com (automotive parts e-commerce platform — Technical Leader, Fullstack & Middleware with Express.js backend and Next.js frontend)
-- UMKM App (mobile POS application for SMEs with inventory/storage management — Backend & Mobile Developer with React Native and Express.js)
-- Estatement (motorcycle parts management system)
-- Kejar Tugas (internal project management tool)
-- AI-powered Grafana monitoring system
-- Tukerin (C2C marketplace MVP)
-- Customer service chatbot (AI initiative)
-- OCR system (AI initiative)
+    description: `Led the end-to-end delivery of multiple web, mobile, and AI-driven products while contributing hands-on across architecture, development, and deployment. Worked on ERP and workshop management systems, SME applications with payment and inventory features, C2C marketplace development, internal project management tools, and AI solutions including monitoring, chatbot, and OCR initiatives.
 
-Demonstrated excellence in both technical leadership and hands-on development
-using Waterfall methodology.`,
+Built scalable applications using React, Next.js, Express.js, Laravel, React Native, Flutter, and Kotlin, while also supporting DevOps workflows with Docker, Portainer, and GitHub-based CI/CD.`,
     skills: [
       { id: 1, title: "Spring Boot" },
       { id: 2, title: "Laravel" },

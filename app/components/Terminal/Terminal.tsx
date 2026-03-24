@@ -13,9 +13,10 @@ interface HistoryItem {
 
 interface TerminalProps {
   onBannerComplete?: () => void
+  skipIntro?: boolean
 }
 
-export default function Terminal({ onBannerComplete }: TerminalProps) {
+export default function Terminal({ onBannerComplete, skipIntro = false }: TerminalProps) {
   const [terminalInput, setTerminalInput] = useState('')
   const [history, setHistory] = useState<HistoryItem[]>([])
   const [isTyping, setIsTyping] = useState(false)
@@ -53,6 +54,14 @@ export default function Terminal({ onBannerComplete }: TerminalProps) {
 
   // Combined initial message and banner effect
   useEffect(() => {
+    if (skipIntro) {
+      setHistory([{ type: 'output', content: banner }])
+      setInitialMessageComplete(true)
+      setShowFullTerminal(true)
+      setIsTyping(false)
+      return
+    }
+
     const showInitialMessage = () => {
       setIsTyping(true)
       let index = 0
@@ -100,7 +109,7 @@ export default function Terminal({ onBannerComplete }: TerminalProps) {
     }
 
     showInitialMessage()
-  }, [onBannerComplete, simulateTyping]) // Added dependencies
+  }, [onBannerComplete, simulateTyping, skipIntro]) // Added dependencies
 
   const handleInput = (e: FormEvent<HTMLDivElement>) => {
     setTerminalInput(e.currentTarget.textContent || '')
