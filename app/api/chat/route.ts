@@ -34,7 +34,7 @@ NOTABLE PROJECTS:
 CONTACT:
 - Email: Dhanuwardhan12@gmail.com
 - LinkedIn: linkedin.com/in/dhanuwardhana
-- GitHub: github.com/Dhanuwrdhn
+- GitHub: github.com/danusprout
 - Open for freelance, remote work, and business collaborations
 
 INSTRUCTIONS:
