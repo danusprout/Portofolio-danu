@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { predefinedQuestions } from "@/app/data/chatbots";
+import { getSiteOrigin } from "@/lib/site";
+
+export const maxDuration = 20;
 
 // Build system prompt with Danu's context
 const SYSTEM_PROMPT = `You are Karen, a friendly and professional AI assistant on Syahrial Danu's portfolio website.
@@ -55,6 +58,7 @@ const MAX_MESSAGE_LENGTH = 500;
 const MODEL_TIMEOUT_MS = 10_000;
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX_REQUESTS = 10;
+const SITE_ORIGIN = getSiteOrigin();
 
 const rateLimitStore = new Map<string, { count: number; resetAt: number }>();
 
@@ -104,7 +108,7 @@ async function callOpenRouterModel(
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${apiKey}`,
-          "HTTP-Referer": "https://danu-portfolio.vercel.app",
+          "HTTP-Referer": SITE_ORIGIN,
           "X-Title": "Danu Portfolio ChatBot",
         },
         body: JSON.stringify({

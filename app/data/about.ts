@@ -9,6 +9,6 @@ export const aboutData: About[] = [
     id: 1,
     heading: 'Howdy! Syahrial Danu here.',
     description:
-      'A forward-thinking IT professional with a degree in Information Technology from Universitas Budiluhur. Possesses strong technical skills in web development, mobile application creation, and AI implementation. Has a passionate interest in emerging technologies and artificial intelligence, constantly seeking opportunities to expand knowledge in these rapidly evolving fields. Successfully served as Tech Lead in a development division, managing the delivery of 6 diverse projects including web platforms, mobile applications, and AI-powered monitoring tools for both company use and client requirements.',
+      'I am a Software Engineer with hands-on experience building web, mobile, and AI-powered solutions from idea to production. My background spans full-stack development, cross-platform mobile engineering, and technical leadership, with a strong focus on delivering products that are scalable, practical, and aligned with real business needs.\n\nOver the years, I have led and contributed to multiple projects across ERP, marketplace, SME applications, automation tools, and customer-facing platforms. I enjoy working across the full product lifecycle, from architecture and development to deployment and optimization, using technologies like Next.js, React, Express.js, Laravel, Flutter, React Native, Kotlin, Docker, and modern CI/CD workflows.',
   },
 ]
