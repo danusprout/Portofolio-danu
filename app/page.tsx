@@ -25,7 +25,6 @@ export default function Home() {
   const terminalRef = useRef<HTMLDivElement>(null);
 
   const handleBannerComplete = () => {
-    window.localStorage.setItem(TERMINAL_BOOT_STORAGE_KEY, "true");
     setShowContent(true);
     setInitialMessageComplete(true);
   };
@@ -39,6 +38,7 @@ export default function Home() {
       setInitialMessageComplete(true);
       setShouldPlayIntro(false);
     } else {
+      window.localStorage.setItem(TERMINAL_BOOT_STORAGE_KEY, "true");
       setShouldPlayIntro(true);
     }
 
@@ -76,6 +76,7 @@ export default function Home() {
             >
               {shouldPlayIntro !== null && (
                 <Terminal
+                  key={shouldPlayIntro ? "terminal-intro" : "terminal-ready"}
                   onBannerComplete={handleBannerComplete}
                   skipIntro={!shouldPlayIntro}
                 />
