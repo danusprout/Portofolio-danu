@@ -27,6 +27,7 @@ export default function Terminal({ onBannerComplete, skipIntro = false }: Termin
   const inputRef = useRef<HTMLDivElement>(null)
   const terminalRef = useRef<HTMLDivElement>(null)
   const outputRef = useRef<HTMLPreElement | null>(null)
+  const hasInitializedBootRef = useRef(false)
 
   const simulateTyping = useCallback((text: string, speed: number, callback: () => void) => {
     let index = 0
@@ -54,6 +55,12 @@ export default function Terminal({ onBannerComplete, skipIntro = false }: Termin
 
   // Combined initial message and banner effect
   useEffect(() => {
+    if (hasInitializedBootRef.current) {
+      return
+    }
+
+    hasInitializedBootRef.current = true
+
     if (skipIntro) {
       setHistory([{ type: 'output', content: banner }])
       setInitialMessageComplete(true)
@@ -62,23 +69,29 @@ export default function Terminal({ onBannerComplete, skipIntro = false }: Termin
       return
     }
 
+    let initialInterval: ReturnType<typeof setInterval> | null = null
+    let bannerInterval: ReturnType<typeof setInterval> | null = null
+    let bannerDelayTimeout: ReturnType<typeof setTimeout> | null = null
+
     const showInitialMessage = () => {
       setIsTyping(true)
       let index = 0
       let currentLine = ''
 
-      const interval = setInterval(() => {
+      initialInterval = setInterval(() => {
         if (index < initialMessage.length) {
           currentLine += initialMessage[index]
           setHistory([{ type: 'output', content: currentLine }])
           index++
         } else {
-          clearInterval(interval)
+          if (initialInterval) {
+            clearInterval(initialInterval)
+          }
           setIsTyping(false)
           setInitialMessageComplete(true)
 
           // Show banner after delay
-          setTimeout(() => {
+          bannerDelayTimeout = setTimeout(() => {
             setShowFullTerminal(true)
             setHistory([])
 
@@ -87,13 +100,15 @@ export default function Terminal({ onBannerComplete, skipIntro = false }: Termin
             let bannerLine = ''
             setIsTyping(true)
 
-            const bannerInterval = setInterval(() => {
+            bannerInterval = setInterval(() => {
               if (bannerIndex < banner.length) {
                 bannerLine += banner[bannerIndex]
                 setHistory([{ type: 'output', content: bannerLine }])
                 bannerIndex++
               } else {
-                clearInterval(bannerInterval)
+                if (bannerInterval) {
+                  clearInterval(bannerInterval)
+                }
                 setIsTyping(false)
                 if (onBannerComplete) {
                   onBannerComplete()
@@ -109,7 +124,19 @@ export default function Terminal({ onBannerComplete, skipIntro = false }: Termin
     }
 
     showInitialMessage()
-  }, [onBannerComplete, simulateTyping, skipIntro]) // Added dependencies
+
+    return () => {
+      if (initialInterval) {
+        clearInterval(initialInterval)
+      }
+      if (bannerInterval) {
+        clearInterval(bannerInterval)
+      }
+      if (bannerDelayTimeout) {
+        clearTimeout(bannerDelayTimeout)
+      }
+    }
+  }, [onBannerComplete, skipIntro])
 
   const handleInput = (e: FormEvent<HTMLDivElement>) => {
     setTerminalInput(e.currentTarget.textContent || '')

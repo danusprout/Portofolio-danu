@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import Layout from "@/app/components/Layout";
@@ -14,34 +14,19 @@ import Navbar from "@/app/components/Navbar";
 import { PatternBackground } from "@/components/ui/pattern-background";
 import { Toaster } from "@/components/ui/sonner";
 
-const TERMINAL_BOOT_STORAGE_KEY = "terminalBootCompleted";
-
 export default function Home() {
   const [showContent, setShowContent] = useState(false);
   const [initialMessageComplete, setInitialMessageComplete] = useState(false);
-  const [shouldPlayIntro, setShouldPlayIntro] = useState<boolean | null>(null);
   const [terminalHeight, setTerminalHeight] = useState(0);
   const [terminalWidth, setTerminalWidth] = useState(0);
   const terminalRef = useRef<HTMLDivElement>(null);
 
-  const handleBannerComplete = () => {
+  const handleBannerComplete = useCallback(() => {
     setShowContent(true);
     setInitialMessageComplete(true);
-  };
+  }, []);
 
   useEffect(() => {
-    const hasCompletedBoot =
-      window.localStorage.getItem(TERMINAL_BOOT_STORAGE_KEY) === "true";
-
-    if (hasCompletedBoot) {
-      setShowContent(true);
-      setInitialMessageComplete(true);
-      setShouldPlayIntro(false);
-    } else {
-      window.localStorage.setItem(TERMINAL_BOOT_STORAGE_KEY, "true");
-      setShouldPlayIntro(true);
-    }
-
     const updateTerminalDimensions = () => {
       if (terminalRef.current) {
         setTerminalHeight(terminalRef.current.offsetHeight);
@@ -74,13 +59,7 @@ export default function Home() {
               transition={{ duration: 0.5 }}
               className="mx-auto w-full backdrop-blur-sm"
             >
-              {shouldPlayIntro !== null && (
-                <Terminal
-                  key={shouldPlayIntro ? "terminal-intro" : "terminal-ready"}
-                  onBannerComplete={handleBannerComplete}
-                  skipIntro={!shouldPlayIntro}
-                />
-              )}
+              <Terminal onBannerComplete={handleBannerComplete} />
             </motion.div>
 
             <AnimatePresence>
