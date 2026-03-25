@@ -256,7 +256,7 @@ export default function Terminal({ onBannerComplete, skipIntro = false }: Termin
               >
                 {item.type === 'output' ? (
                   <Linkify
-                    componentDecorator={(decoratedHref, decoratedText, key) => (
+                    componentDecorator={(decoratedHref, decoratedText) => (
                       <a
                         href={decoratedHref}
                         target="_blank"

@@ -1,13 +1,12 @@
 "use client";
 
 // Experiences.tsx
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { CalendarDays, Briefcase, GraduationCap } from "lucide-react";
 import { HiOutlineOfficeBuilding } from "react-icons/hi";
 import { experiences as experienceItem } from "@/app/data/experiences"; // Import experiences data
 import type { Experience } from "@/app/data/experiences"; // Import Experience type
 import { motion } from "framer-motion";
-import { Skeleton } from "@/components/ui/skeleton";
 
 const ExperienceItem = ({
   experience,
@@ -116,47 +115,7 @@ const ExperienceItem = ({
 
 export default function Experiences() {
   const [hoveredId, setHoveredId] = useState<number | null>(null);
-  const [experiencesData, setExperiencesData] = useState<Experience[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setExperiencesData(experienceItem);
-    setLoading(false);
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="space-y-8">
-        <div className="flex items-center space-x-4">
-          <Skeleton className="h-12 w-12" />
-          <div className="space-y-2">
-            <Skeleton className="h-8 w-32" />
-            <Skeleton className="h-4 w-64" />
-          </div>
-        </div>
-        {[...Array(3)].map((_, i) => (
-          <div key={i} className="relative pl-10 pb-8 pt-2">
-            <Skeleton className="absolute left-0 top-0 h-full w-1" />
-            <Skeleton className="absolute left-0 top-0 -translate-x-1/2 h-8 w-8 rounded-full" />
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <Skeleton className="h-4 w-4" />
-                <Skeleton className="h-4 w-24" />
-              </div>
-              <Skeleton className="h-6 w-48" />
-              <Skeleton className="h-6 w-36" />
-              <Skeleton className="h-20 w-full" />
-              <div className="flex flex-wrap gap-2">
-                {[...Array(3)].map((_, j) => (
-                  <Skeleton key={j} className="h-6 w-20" />
-                ))}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  }
+  const experiencesData: Experience[] = experienceItem;
 
   return (
     <motion.div

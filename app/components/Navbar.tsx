@@ -14,15 +14,18 @@ export default function Navbar({ terminalHeight }: NavbarProps) {
   const [activeSection, setActiveSection] = useState<string | null>(null)
 
   // Throttle helper to prevent excessive scroll event firings
-  function throttle<T extends (...args: any[]) => any>(func: T, limit: number) {
-    let inThrottle: boolean;
-    return function(this: any, ...args: Parameters<T>) {
+  function throttle<Args extends unknown[]>(func: (...args: Args) => void, limit: number) {
+    let inThrottle = false
+
+    return (...args: Args) => {
       if (!inThrottle) {
-        func.apply(this, args);
-        inThrottle = true;
-        setTimeout(() => inThrottle = false, limit);
+        func(...args)
+        inThrottle = true
+        setTimeout(() => {
+          inThrottle = false
+        }, limit)
       }
-    };
+    }
   }
 
   useEffect(() => {

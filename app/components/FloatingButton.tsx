@@ -20,8 +20,8 @@ export default function FloatingButton({
   const [isMuted, setIsMuted] = useState(true);
   const [volume, setVolume] = useState(0.4);
   const [isLoading, setIsLoading] = useState(true);
-  const fadeInterval = useRef<ReturnType<typeof setInterval>>();
-  const autoplayTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const fadeInterval = useRef<ReturnType<typeof setInterval> | null>(null);
+  const autoplayTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasAutoplayedRef = useRef(false);
 
   const [play, { pause }] = useSound("/music/background-music.mp3", {

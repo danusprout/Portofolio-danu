@@ -71,7 +71,6 @@ const SHAPES = [
 
 export const TetrisAnimation = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const [gridSize, setGridSize] = useState({ rows: 8, cols: 12 });
   const [blockSize, setBlockSize] = useState(0);
   const [grid, setGrid] = useState<string[][]>([]);
@@ -97,7 +96,6 @@ export const TetrisAnimation = () => {
         const cols = Math.floor(offsetWidth / newBlockSize);
         const rows = Math.floor(offsetHeight / newBlockSize);
 
-        setDimensions({ width: offsetWidth, height: offsetHeight });
         setGridSize({ rows, cols });
         setBlockSize(newBlockSize);
 

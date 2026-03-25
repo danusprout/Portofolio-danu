@@ -15,9 +15,13 @@ interface Message {
 }
 
 // Global utility outside component
-function debounce<T extends (...args: any[]) => void>(fn: T, wait = 50) {
-  let t: any;
-  return (...args: Parameters<T>) => {
+function debounce<Args extends unknown[]>(
+  fn: (...args: Args) => void,
+  wait = 50
+) {
+  let t: ReturnType<typeof setTimeout> | undefined;
+
+  return (...args: Args) => {
     clearTimeout(t);
     t = setTimeout(() => fn(...args), wait);
   };

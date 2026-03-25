@@ -1,6 +1,6 @@
 import { projects as projectItem } from "@/app/data/projects";
 import type { Project } from "@/app/data/projects";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { HiOutlineBeaker, HiOutlineExternalLink } from "react-icons/hi";
 import { motion } from "framer-motion";
 import {
@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/dialog";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 
 import { TetrisAnimation } from "./TetrisAnimation";
 
@@ -22,7 +21,6 @@ const ProjectItem = ({
 }: {
   project: Project;
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const hasLiveLink = project.link !== "#";
 
@@ -38,8 +36,6 @@ const ProjectItem = ({
       <div
         className="transform cursor-pointer transition-all duration-300 group"
         onClick={() => setIsDialogOpen(true)}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
       >
         <div className="relative w-full h-64 overflow-hidden border-2 border-[#273344] bg-[#131821]/80 backdrop-blur-md group-hover:border-[#FFA23E] transition-colors">
           <div className="flex h-full flex-col md:flex-row">
@@ -162,32 +158,7 @@ const ProjectItem = ({
 
 // Main Projects Component
 export default function Projects() {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setProjects(projectItem);
-    setLoading(false);
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="space-y-8">
-        <div className="flex items-center space-x-4">
-          <Skeleton className="h-12 w-12" />
-          <div className="space-y-2">
-            <Skeleton className="h-8 w-32" />
-            <Skeleton className="h-4 w-64" />
-          </div>
-        </div>
-        {[...Array(3)].map((_, i) => (
-          <div key={i} className="space-y-4">
-            <Skeleton className="h-64 w-full" />
-          </div>
-        ))}
-      </div>
-    );
-  }
+  const projects: Project[] = projectItem;
 
   return (
     <motion.div

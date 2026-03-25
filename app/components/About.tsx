@@ -4,42 +4,12 @@
 import type { About } from '@/app/data/about' // Change to type-only import
 import { aboutData } from '@/app/data/about'
 import { Button } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
 
 export default function About() {
-  const [aboutMe, setAboutMe] = useState<About[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    setAboutMe(aboutData)
-    setLoading(false)
-  }, [])
-
-  if (loading) {
-    return (
-      <div className="space-y-8">
-        <div className="flex items-center space-x-4">
-          <Skeleton className="h-12 w-12" />
-          <div className="space-y-2">
-            <Skeleton className="h-8 w-32" />
-            <Skeleton className="h-4 w-64" />
-          </div>
-        </div>
-        <div className="space-y-4">
-          <Skeleton className="h-12 w-3/4" />
-          <Skeleton className="h-32 w-full" />
-          <div className="flex space-x-4">
-            <Skeleton className="h-10 w-24" />
-            <Skeleton className="h-10 w-32" />
-          </div>
-        </div>
-      </div>
-    )
-  }
+  const aboutMe: About[] = aboutData
 
   return (
     <motion.div
