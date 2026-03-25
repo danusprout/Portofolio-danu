@@ -197,52 +197,53 @@ export default function ChatBot() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-20 right-4 w-[90vw] max-w-[400px] h-[500px] bg-[#131821]/50 backdrop-blur-lg border-[2px] border-[#273344] rounded-xl overflow-hidden shadow-xl flex flex-col"
+            className="fixed bottom-20 right-4 z-[60] flex h-[min(70vh,500px)] min-h-[420px] w-[min(90vw,400px)] min-h-0 flex-col overflow-hidden rounded-xl border-[2px] border-[#273344] bg-[#131821]/50 shadow-xl backdrop-blur-lg"
           >
             {/* Title Bar */}
-            <div className="p-4 bg-[#131821]/80 border-b border-[#273344] backdrop-blur-md">
+            <div className="shrink-0 border-b border-[#273344] bg-[#131821]/80 p-4 backdrop-blur-md">
               <h3 className="text-white font-medium text-center">🤖 Karen <span className="text-xs text-emerald-400 font-normal">• AI Powered</span></h3>
             </div>
 
             {/* Chat Messages */}
-            <ScrollArea className="flex-grow p-4" ref={scrollAreaRef}>
-              {messages.map((message, index) => (
-                <div
-                  key={index}
-                  className={`mb-3 ${
-                    message.isUser ? "text-right" : "text-left"
-                  }`}
-                >
-                  <span
-                    className={`inline-block p-3 rounded-lg max-w-[85%] text-sm leading-relaxed ${
-                      message.isUser
-                        ? "bg-[#1c2736] text-slate-200 rounded-br-sm"
-                        : "bg-[#273344] text-slate-200 rounded-bl-sm"
-                    }`}
+            <ScrollArea className="min-h-0 flex-1" ref={scrollAreaRef}>
+              <div className="space-y-3 p-4">
+                {messages.map((message, index) => (
+                  <div
+                    key={index}
+                    className={message.isUser ? "text-right" : "text-left"}
                   >
-                    {message.text}
-                  </span>
-                </div>
-              ))}
-              {/* Typing indicator */}
-              {isLoading && (
-                <div className="mb-3 text-left">
-                  <span className="inline-block p-3 rounded-lg bg-[#273344] text-slate-400 rounded-bl-sm">
-                    <span className="flex items-center gap-2 text-sm">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Thinking...
+                    <span
+                      className={`inline-block max-w-[85%] rounded-lg p-3 text-sm leading-relaxed ${
+                        message.isUser
+                          ? "bg-[#1c2736] text-slate-200 rounded-br-sm"
+                          : "bg-[#273344] text-slate-200 rounded-bl-sm"
+                      }`}
+                    >
+                      {message.text}
                     </span>
-                  </span>
-                </div>
-              )}
+                  </div>
+                ))}
+                {/* Typing indicator */}
+                {isLoading && (
+                  <div className="text-left">
+                    <span className="inline-block rounded-lg bg-[#273344] p-3 text-slate-400 rounded-bl-sm">
+                      <span className="flex items-center gap-2 text-sm">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Thinking...
+                      </span>
+                    </span>
+                  </div>
+                )}
+                <div className="h-1" />
+              </div>
             </ScrollArea>
 
             {/* Questions Carousel */}
-            <div className="px-4 pt-3 pb-2 border-t border-[#273344] bg-[#131821]/50 overflow-hidden">
+            <div className="shrink-0 overflow-hidden border-t border-[#273344] bg-[#131821]/50 px-4 pt-3 pb-2">
               <p className="text-[10px] text-slate-500 mb-1.5 uppercase tracking-wider">Quick questions</p>
               <div
                 ref={questionContainerRef}
-                className={`flex space-x-2 overflow-x-auto ${isLoading ? 'pointer-events-none opacity-70' : 'cursor-grab active:cursor-grabbing'}`}
+                className={`flex space-x-2 overflow-x-auto pb-1 ${isLoading ? 'pointer-events-none opacity-70' : 'cursor-grab active:cursor-grabbing'}`}
                 style={{ scrollbarWidth: "thin", scrollbarColor: "#273344 transparent", WebkitOverflowScrolling: "touch" }}
                 onMouseDown={isLoading ? undefined : handleMouseDown}
                 onMouseUp={isLoading ? undefined : handleMouseUp}
@@ -282,7 +283,7 @@ export default function ChatBot() {
             {/* Input Field */}
             <form
               onSubmit={handleSubmit}
-              className="p-3 border-t border-[#273344] bg-[#131821]/80 flex gap-2"
+              className="shrink-0 border-t border-[#273344] bg-[#131821]/80 p-3 flex gap-2"
             >
               <input
                 ref={inputRef}
