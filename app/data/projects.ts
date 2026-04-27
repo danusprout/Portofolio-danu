@@ -136,6 +136,39 @@ export const projects: Project[] = [
     imageUrl: "/photos/LogoSentralPart-Horizontal.svg",
   },
   {
+    id: 10,
+    title: "Invoice Generator",
+    company: "Personal Project",
+    date: "2026-04-01",
+    description:
+      "A personal side project for generating professional invoices and exporting them as PDF. Built to simplify the billing process with a clean form-based UI that produces ready-to-send invoice documents instantly.",
+    skills: [
+      { id: 1, title: "Next.js" },
+      { id: 2, title: "React.js" },
+      { id: 3, title: "PDF Generation" },
+    ],
+    type: "personal",
+    link: "https://invoice-generator-pdf-kappa.vercel.app",
+    imageUrl: "/photos/invoice-generator.png",
+  },
+  {
+    id: 9,
+    title: "Bornworks Landing Page",
+    company: "Personal Project",
+    date: "2026-04-01",
+    description:
+      "Designed and developed a modern landing page for Bornworks, a digital product studio focused on building web apps, mobile apps, and SaaS platforms. Features a clean, conversion-focused layout with service highlights, portfolio showcase, and contact integration.",
+    skills: [
+      { id: 1, title: "Next.js" },
+      { id: 2, title: "React.js" },
+      { id: 3, title: "Tailwind CSS" },
+      { id: 4, title: "UI/UX Design" },
+    ],
+    type: "personal",
+    link: "https://landing-page-bornworks.vercel.app",
+    imageUrl: "/photos/bornworks.png",
+  },
+  {
     id: 8,
     title: "UMKM App",
     company: "PT Global Innovation Technology",
