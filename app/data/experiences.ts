@@ -15,11 +15,16 @@ export const experiences: Experience[] = [
     title: "Software Engineer",
     company: "Sprout Digital Labs",
     date: "Feb 2025 - Present",
-    description: `Currently working as a Software Engineer at Sprout, contributing to the development and maintenance of the platform.`,
+    description: `Working as a Software Engineer at Sprout Digital Labs, contributing to the Labamu platform — an SME SaaS product serving Indonesian businesses. Involved across mobile and backend development using Flutter and NestJS, handling everything from new feature delivery to production bug fixes.
+
+Revamped the OTP authentication flow to improve reliability and user experience. Resolved critical issues in payment and auth flows, integrated analytics and observability tools including MoEngage, PostHog, and Datadog, and drove API and app load performance improvements through targeted optimizations.`,
     skills: [
       { id: 1, title: "Flutter" },
       { id: 2, title: "NestJS" },
       { id: 3, title: "Next.js" },
+      { id: 4, title: "MoEngage" },
+      { id: 5, title: "PostHog" },
+      { id: 6, title: "Datadog" },
     ],
     type: "work",
   },
